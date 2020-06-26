@@ -1,0 +1,77 @@
+div.rule {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    div.form {
+        width: 85vw;
+        border: 1px solid gray;
+        padding: 1vw;
+        div.field {
+            margin: 2vh 0;
+            label {
+                font-weight: 500;
+                width: 20vw;
+                display: inline-block;
+            }
+            input, textarea {
+                width: 70%;
+            }
+            select#match {
+                width: 25%;
+            }
+        }
+        div.conditions  {
+            max-height: 35vh;
+            overflow-y: auto;
+            margin-bottom: 2vh;
+            div.condition:not(:first-child) {
+                div.field {
+                    label {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+    div.footer {
+        display: flex;
+        align-content: flex-start;
+        width: 85vw;
+        margin: 2vh 0;
+        button {
+            margin: 0 1vw;
+        }
+    }
+    .btn {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        border-radius: .15rem;
+        line-height: 1.5;
+        padding: 0.5rem;
+        color: white;
+        background-color: #179bd3;
+        cursor: pointer;
+        min-width: 3.6rem;
+        max-width: 18rem;
+        letter-spacing: .12em;
+        border: .05rem solid #0072a3;
+        text-transform: uppercase;
+        &.add-condition  {
+            line-height: 0.75;
+            text-transform: none;
+            background: transparent;
+            color: #000000;
+        }
+        &.close {
+            background: transparent;
+            color: #000000;
+        }
+        &.save {
+            background-color: #36cc57;
+        }
+    }
+}
+

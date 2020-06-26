@@ -1,0 +1,10 @@
+div.condition {
+    display: flex;
+    flex-direction: row;
+    div.field {
+        width: 33%;
+        select {
+            width: 90%; 
+        }
+    }
+}

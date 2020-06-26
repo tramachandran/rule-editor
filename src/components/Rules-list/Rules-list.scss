@@ -1,0 +1,64 @@
+div.rules-list {
+    width: 100%;
+    padding: 0 2vw;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+    div.title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        display: inline-block;
+        margin-top: 1vh;
+        margin-right: 2vw;
+    }
+    div.cards {
+        display: flex;
+        flex-flow: row wrap;
+        a {
+            text-decoration: none;
+        }
+        div.card{
+            min-height: 35vh;
+            min-width: 25vw;
+            box-shadow: 0 .15rem 0 0 #dedede;
+            border: .05rem solid #dedede;
+            margin: 0.5rem 1rem 0.5rem 0;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+            .header {
+                font-weight: 500;
+                padding: .6rem .9rem;
+                border-bottom: .05rem solid #dedede;
+                border-bottom-color: #dedede;
+                border-bottom-width: .05rem;
+            }
+        }
+    }
+    
+    // @media screen and (min-width: 768px) {
+    //     width: 50%;
+    //     font-size: 1rem;
+    //     padding: 0 0.5vw;
+    // }
+    .btn {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        border-radius: .15rem;
+        line-height: 1.5;
+        padding: 0.5rem;
+        color: white;
+        background-color: #179bd3;
+        cursor: pointer;
+        min-width: 3.6rem;
+        max-width: 18rem;
+        letter-spacing: .12em;
+        border: .05rem solid #0072a3;
+        text-transform: uppercase;
+    }
+}
+
+div.error {
+    color: red;
+}
