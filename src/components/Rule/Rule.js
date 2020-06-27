@@ -26,6 +26,7 @@ const Rule = (props) => {
     const [description, setDescription] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMsgs, setErrorMsgs] = useState([]);
     useEffect(() => {
         /// need to add the code for setting fields, operations and items from an API call
         setFields(defaultFields);
@@ -53,29 +54,51 @@ const Rule = (props) => {
           setError(errorMsg);
         })
     };
+
+    const closeErrorMsgs = () => {
+        setErrorMsgs([]);
+    }
     
     const addRule = () => {
         setConditions([...conditions, defaultCondition]);
+    }
+
+    const deleteCondition = (index) => {
+        conditions.splice(index,1);
+        setConditions([...conditions]);
     }
     
     let conditionRefs = [];
     const history = useHistory();
     const saveRule = () => {
         let rule = {};
+        let errorMsgs = [];
         rule.name = name;
+        if (!name) {
+            errorMsgs.push("Rule name should not be empty");
+        }
         rule.description = description;
         rule.match = match;
         rule.conditions = [];
         for (let conditionRef of conditionRefs) {
-            let data = {}
-            data.field = conditionRef.current.getFieldValue();
-            data.operator = conditionRef.current.getOperatorValue();
-            data.value = conditionRef.current.getValue();
-            rule.conditions.push(data);
+            let condition = conditionRef.current.getCondition();
+            // data.field = conditionRef.current.getFieldValue();
+            // data.operator = conditionRef.current.getOperatorValue();
+            // data.value = conditionRef.current.getValue();
+            errorMsgs = [...errorMsgs, ...condition.errorMsgs];
+            delete condition.errorMsgs;
+            rule.conditions.push(condition);
         }
         rule.id = new Date().getTime();
-        console.log(rule);
-        history.push('/rules');
+        if (rule.conditions.length === 0) {
+            errorMsgs.push("Add atleast one condition to the rule.")
+        }
+        if (errorMsgs.length === 0) {
+            history.push('/rules');
+        } else {
+            setErrorMsgs(errorMsgs)
+        }
+        
     }
     if (isLoading) {
         return <div><h4>Rule is loading.....</h4></div>
@@ -85,25 +108,35 @@ const Rule = (props) => {
         return (<div className="rule">
             <h3>Rule Details</h3>
             {
-            error ? <div className="error">{error}</div> : null
+                errorMsgs.length > 0 ? (
+                    <div className="form-error">
+                    <div>Please resolve the following errors to save the rule</div>
+                    {
+                        errorMsgs.map((msg, index) => {
+                            return <div key={index} className="error">{msg}</div>
+                        })
+                    }
+                    <div title="close errors" onClick= {closeErrorMsgs} className="remove"><button class="btn btn-link btn-danger">X</button></div>
+                    </div>
+                ) : null
             }        
             <div className="form">
                 <div className="field">
                     <label htmlFor="rule-name">Rule Name:</label>
-                    <input type="text" id="rule-name" value={name} onChange={(event) => {setName(event.target.value)}}/>
+                    <input type="text" placeholder="Rule Name" id="rule-name" value={name} onChange={(event) => {setName(event.target.value)}}/>
                 </div>
                 <div className="field">
                     <label htmlFor="rule-desc">Description:</label>
-                    <textarea type="text" id="rule-desc" value={description} onChange={(event) => {setDescription(event.target.value)}}></textarea>
+                    <textarea type="text" id="rule-desc" placeholder="Rule Description" value={description} onChange={(event) => {setDescription(event.target.value)}}></textarea>
                 </div>
                 <div className="field">
-                    <label htmlFor="match">Match</label>
+                    <label htmlFor="match">Match:</label>
                     <select type="text" id="match" value={match} onChange={(event) => {setMatch(event.target.value)}}>
                         <option value="any">Any</option>
                         <option value="all">All</option>
                     </select> of the conditions
                 </div>
-                <h4 style={{textDecoration: 'underline'}}>Conditions</h4>
+                <div className="heading">Conditions</div>
                 <div className="conditions">
                     {
                     conditions.map((condition, index) => {
@@ -111,16 +144,18 @@ const Rule = (props) => {
                         return (<Condition 
                                     key={index} 
                                     condition={condition}
+                                    delete={deleteCondition}
                                     items={items}
                                     fields={fields} 
                                     operations={operators}
+                                    index={index}
                                     ref={conditionRefs[index]}>
                                 </Condition>)
                     })
                     }
                 </div>
                 <div className="add-button">
-                    <button className="btn add-condition" type="button" onClick={() => {addRule()}}>+ Add Condition</button>
+                    <button className="btn condition" type="button" onClick={() => {addRule()}}>+ Add Condition</button>
                 </div>
             </div>
             <div className="footer">

@@ -60,10 +60,13 @@ function RulesList(stateProps) {
                             <div className="header">{rule.name}</div>
                         </Link>
                         <div className="body">
-                            <div className="description">{rule.description}</div>
                             <div className="data-list">
                                 <span>No.of Conditions: </span>
                                 <span className="badge">{rule.conditions.length}</span>
+                            </div>
+                            <div className="data-list">
+                                <span>Created on: </span>
+                                <span>{getShortDate(rule.id)}</span>
                             </div>
                             <div className="data-list">
                                 <span>Created By: </span>
@@ -73,6 +76,7 @@ function RulesList(stateProps) {
                                 <span>Updated on: </span>
                                 <span>{getShortDate(rule.updatedon)}</span>
                             </div>
+                            <div className="description">{rule.description || 'No description provided for this rule.'}</div>
                         </div>
                         <div className="footer">
                             <Link to={`./rules/${rule.id}`}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
-import './App.css';
+import './App.scss';
 import RulesList from "./components/Rules-list/Rules-list";
 import Rule from './components/Rule/Rule';
 

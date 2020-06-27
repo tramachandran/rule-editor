@@ -27,11 +27,67 @@ function Condition(props, ref) {
                 setValueType('number');
             }
         }
-    },[])
+    },[]);
+    const getFieldValue =  () => {
+        return field;
+    }
+    const getOperatorValue =  () => {
+        return operator;
+    }
+    const getValue =  () => {
+        switch(operator) {
+            case 'contains':
+                return selectValue;
+            case 'in':
+                return stringValue;
+            default:
+                return +numValue;
+        }
+    }
     const fieldSelectRef = useRef(null);
     useImperativeHandle(ref, () => ({
         getFieldValue: () => {
             return field;
+        },
+        getCondition: () => {
+            let condition = {};
+            let errorMsgs  = [];
+            let fieldValue = getFieldValue();
+            if (!fieldValue) {
+                errorMsgs.push("Field is not selected");
+            } else {
+                condition.field = fieldValue;
+                let operator = getOperatorValue();
+                if (!operator) {
+                    errorMsgs.push("Operation is not selected");
+                } else {
+                    condition.operation = operator;
+                    let value = getValue();
+                    if (operator === 'contains') {
+                        if (value.length === 0) {
+                            errorMsgs.push("Items are not selected for value field");
+                        } else {
+                            condition.value = value;
+                        }
+                    } else if (operator === 'in') {
+                        if (!value) {
+                            errorMsgs.push("Value field should not be empty");
+                            
+                        } else {
+                            (value.split(",").length <=1 ) ? errorMsgs.push("Value field should contain multiple comma seperated values") :
+                            condition.value = value;
+                        }
+                    } else {
+                        if (value < 0) {
+                            errorMsgs.push("Value is not provided");
+                        } else {
+                            condition.value = value;
+                        }
+                    }                    
+                }
+            }
+            condition.errorMsgs = errorMsgs;
+            return condition;
         },
         getOperatorValue: () => {
             return operator;
@@ -100,11 +156,16 @@ function Condition(props, ref) {
         const value = event.target.value;
         setStringValue(value);
     }
+    const removeCondition = () => {
+        props.delete(props.index);
+    }
     
     return (
         <div className="condition">
             <div className="field">
-                <label>Field</label>
+                {
+                    (props.index === 0) ? <label>Field</label>: null
+                }
                 <select ref={fieldSelectRef} value={field} onChange={(event) => {fieldChange(event)}}>
                     <option value="">Select Field</option>
                     {
@@ -115,7 +176,9 @@ function Condition(props, ref) {
                 </select>
             </div>
             <div className="field">
-                <label>Operation</label>
+                {
+                    (props.index === 0) ? <label>Operation</label>: null
+                }
                 <select value={operator} onChange={(event) => {operationChange(event)}}> 
                     <option value="">Select Operation</option>
                     {
@@ -125,7 +188,9 @@ function Condition(props, ref) {
                 </select>
             </div>
             <div className="field">
-                <label>Value</label>
+                {
+                    (props.index === 0) ? <label>Value</label>: null
+                }
                 {
                     valueType === 'select' ?
                         (
@@ -140,11 +205,18 @@ function Condition(props, ref) {
                         ) : 
                         (
                             (valueType === 'string') ? 
-                            <input  value={stringValue} onChange={(event) => {stringValueChange(event)}} type="text"/> :
+                            <input  placeholder="comma seperated values" value={stringValue} onChange={(event) => {stringValueChange(event)}} type="text"/> :
                             <input  onChange={(event) => {numValueChange(event)}} value={numValue} type="number"/>
                         )
                 }
             </div>
+            {
+                (props.index > 0) ? (
+                <div title="Remove Condition" onClick= {removeCondition} className="remove">
+                    <button class="btn condition">X</button>
+                </div>) : null
+            }
+            
         </div>
     )
 }

@@ -3,15 +3,33 @@ div.rule {
     flex-flow: column;
     justify-content: center;
     align-items: center;
+    div.form-error {
+        width: 85vw;
+        border: 1px solid #dedede;
+        padding: 1vw;
+        position: relative;
+        margin-bottom: 1vh;
+        max-height: 10vh;
+        overflow-y: auto;
+        .remove {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+    }
     div.form {
         width: 85vw;
-        border: 1px solid gray;
+        border: 1px solid #dedede;
         padding: 1vw;
+        div.heading {
+            text-decoration: underline;
+            font-weight: 500;
+        }
         div.field {
-            margin: 2vh 0;
+            margin: 3vh 0;
             label {
                 font-weight: 500;
-                width: 20vw;
+                width: 28%;
                 display: inline-block;
             }
             input, textarea {
@@ -22,15 +40,11 @@ div.rule {
             }
         }
         div.conditions  {
-            max-height: 35vh;
+            max-height: 33vh;
             overflow-y: auto;
             margin-bottom: 2vh;
-            div.condition:not(:first-child) {
-                div.field {
-                    label {
-                        display: none;
-                    }
-                }
+            div.condition:not(:last-child) {
+                border-bottom: .05rem solid #dedede
             }
         }
     }
@@ -44,22 +58,7 @@ div.rule {
         }
     }
     .btn {
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: 400;
-        text-align: center;
-        vertical-align: middle;
-        border-radius: .15rem;
-        line-height: 1.5;
-        padding: 0.5rem;
-        color: white;
-        background-color: #179bd3;
-        cursor: pointer;
-        min-width: 3.6rem;
-        max-width: 18rem;
-        letter-spacing: .12em;
-        border: .05rem solid #0072a3;
-        text-transform: uppercase;
-        &.add-condition  {
+        &.condition  {
             line-height: 0.75;
             text-transform: none;
             background: transparent;
@@ -71,6 +70,31 @@ div.rule {
         }
         &.save {
             background-color: #36cc57;
+        }
+    }
+    @media screen and (max-width: 800px) {
+        div.form {
+            div.field {
+                margin: 2.25vh 0;
+                label {
+                    width: 35%;
+                }
+                input, textarea {
+                    width: 60%;
+                }
+                select#match {
+                    width: 20%;
+                }
+            }
+            div.conditions  {
+                max-height: 37vh;
+                div.condition {
+                    margin: 2vh 0;
+                    div.field {
+                        width: 28%;                        
+                    }
+                }
+            }
         }
     }
 }

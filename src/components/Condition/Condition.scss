@@ -2,9 +2,18 @@ div.condition {
     display: flex;
     flex-direction: row;
     div.field {
-        width: 33%;
+        width: 32%;
         select {
             width: 90%; 
+        }
+    }
+    div.remove {
+        width: 3%;
+        margin: 2vh 0;
+        text-align: center;
+        .condition {
+            background-color: firebrick;
+            color: floralwhite;
         }
     }
 }

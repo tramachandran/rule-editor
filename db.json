@@ -1,0 +1,119 @@
+{
+    "rules":[
+        {
+           "name":"My First rule",
+           "createdby":"admin",
+           "description":"This is my first Rule, this handles the data for all the order executed with item TV as part of it otherwise this rule will valuate to false.",
+           "match":"all",
+           "conditions":[
+              {
+                 "field":"items",
+                 "operator":"contains",
+                 "value":[
+                    "TV",
+                    "SOFA"
+                 ]
+              },
+              {
+                 "field":"postal-code",
+                 "operator":"in",
+                 "value":"123224,5543223"
+              }
+           ],
+           "id":1593171406916
+        },
+        {
+           "name":"My new rule",
+           "createdby":"admin",
+           "description":"This is my new rule need to be executed for all the orders hereafter",
+           "match":"any",
+           "conditions":[
+              {
+                 "field":"rental-amount",
+                 "operator":">=",
+                 "value":1000
+              },
+              {
+                 "field":"age",
+                 "operator":"<=",
+                 "value":35
+              },
+              {
+                 "field":"rental-tenure",
+                 "operator":">=",
+                 "value":6
+              }
+           ],
+           "id":1593171502875,
+           "updatedon":1593172902875
+        },
+        {
+            "name":"Rule Two",
+            "description":"Second rule I creating for testing the minimum age.",
+            "match":"all",
+            "conditions":[
+               {
+                  "field":"age",
+                  "operator":">=",
+                  "value":27
+               },
+               {
+                  "field":"rental-tenure",
+                  "operator":"<=",
+                  "value":12
+               }
+            ],
+            "id":1593171199622,
+            "createdby":"admin",
+            "updatedon":1593171299622
+         },
+         {
+            "name":"Rule with age & amount",
+            "createdby":"admin",
+            "description":"This is a new rule involved with the fields age and amount",
+            "match":"any",
+            "conditions":[
+               {
+                  "field":"rental-amount",
+                  "operator":">=",
+                  "value":10000
+               },
+               {
+                  "field":"age",
+                  "operator":"=",
+                  "value":40
+               }
+            ],
+            "id":1599171502875,
+            "updatedon":1599672902875
+         },
+         {
+            "name":"Rule for items, age & amount",
+            "createdby":"admin",
+            "description":"This is a new rule involved with the fields age and amount",
+            "match":"any",
+            "conditions":[
+               {
+                  "field":"rental-amount",
+                  "operator":">=",
+                  "value":10000
+               },
+               {
+                "field":"items",
+                "operator":"contains",
+                "value":[
+                   "TV",
+                   "SOFA"
+                ]
+               },
+               {
+                "field":"postal-code",
+                "operator":"in",
+                "value":"123224,5543223"
+               }
+            ],
+            "id":1597171502875,
+            "updatedon":1597672902875
+         }
+     ]
+}
