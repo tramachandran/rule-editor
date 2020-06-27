@@ -18,4 +18,4 @@ const defaultFields = [{
     value: 'rental-tenure',
     text: 'Rental Tenure(months)'
 }];
-export default  defaultFields;
+export default defaultFields;
