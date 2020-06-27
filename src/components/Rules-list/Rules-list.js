@@ -41,7 +41,13 @@ function RulesList(stateProps) {
     const getShortDate = (timeInSecs) => {
         if (timeInSecs) {
             let date = new Date(timeInSecs);
-            return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+            let hours = date.getHours();
+            hours = (hours < 10) ? `0${hours}`: hours;
+            let minutes = date.getMinutes();
+            minutes = (minutes < 10) ? `0${minutes}`: minutes;
+            let seconds = date.getSeconds();
+            seconds = (seconds < 10) ? `0${seconds}`: seconds;
+            return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${hours}:${minutes}:${seconds}`;
         } else {
             return '--';
         }
