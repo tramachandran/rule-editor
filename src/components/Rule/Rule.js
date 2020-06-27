@@ -25,6 +25,7 @@ const Rule = (props) => {
     const [match, setMatch] = useState('any');
     const [description, setDescription] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         /// need to add the code for setting fields, operations and items from an API call
         setFields(defaultFields);
@@ -35,10 +36,11 @@ const Rule = (props) => {
         } else {
             getRuleData();
         }
-        
     }, []);
     const getRuleData = () => {
+        setIsLoading(true);
         axios.get(`rules/${ruleId}`).then(response => {
+            setIsLoading(false);
             const ruleData = response.data;
             setName(ruleData.name);
             setDescription(ruleData.description);
@@ -46,6 +48,7 @@ const Rule = (props) => {
             setConditions([...ruleData.conditions]);
             setError('')
         }).catch((err) => {
+          setIsLoading(false);
           const errorMsg = err.message;
           setError(errorMsg);
         })
@@ -74,54 +77,60 @@ const Rule = (props) => {
         console.log(rule);
         history.push('/rules');
     }
-    return (<div className="rule">
-        <h3>Rule Details</h3>
-        {
-           error ? <div className="error">{error}</div> : null
-        }        
-        <div className="form">
-            <div className="field">
-                <label htmlFor="rule-name">Rule Name:</label>
-                <input type="text" id="rule-name" value={name} onChange={(event) => {setName(event.target.value)}}/>
+    if (isLoading) {
+        return <div><h4>Rule is loading.....</h4></div>
+    } else if (error !== '') {
+        return <div className="error"><h4>{error}</h4></div>
+    } else {
+        return (<div className="rule">
+            <h3>Rule Details</h3>
+            {
+            error ? <div className="error">{error}</div> : null
+            }        
+            <div className="form">
+                <div className="field">
+                    <label htmlFor="rule-name">Rule Name:</label>
+                    <input type="text" id="rule-name" value={name} onChange={(event) => {setName(event.target.value)}}/>
+                </div>
+                <div className="field">
+                    <label htmlFor="rule-desc">Description:</label>
+                    <textarea type="text" id="rule-desc" value={description} onChange={(event) => {setDescription(event.target.value)}}></textarea>
+                </div>
+                <div className="field">
+                    <label htmlFor="match">Match</label>
+                    <select type="text" id="match" value={match} onChange={(event) => {setMatch(event.target.value)}}>
+                        <option value="any">Any</option>
+                        <option value="all">All</option>
+                    </select> of the conditions
+                </div>
+                <h4 style={{textDecoration: 'underline'}}>Conditions</h4>
+                <div className="conditions">
+                    {
+                    conditions.map((condition, index) => {
+                        conditionRefs[index] = React.createRef();
+                        return (<Condition 
+                                    key={index} 
+                                    condition={condition}
+                                    items={items}
+                                    fields={fields} 
+                                    operations={operators}
+                                    ref={conditionRefs[index]}>
+                                </Condition>)
+                    })
+                    }
+                </div>
+                <div className="add-button">
+                    <button className="btn add-condition" type="button" onClick={() => {addRule()}}>+ Add Condition</button>
+                </div>
             </div>
-            <div className="field">
-                <label htmlFor="rule-desc">Description:</label>
-                <textarea type="text" id="rule-desc" value={description} onChange={(event) => {setDescription(event.target.value)}}></textarea>
+            <div className="footer">
+                <button className="btn save" onClick={() => saveRule()}>Save</button>
+                <Link to={"/rules"}>
+                    <button className="btn close">Close</button>
+                </Link>
             </div>
-            <div className="field">
-                <label htmlFor="match">Match</label>
-                <select type="text" id="match" value={match} onChange={(event) => {setMatch(event.target.value)}}>
-                    <option value="any">Any</option>
-                    <option value="all">All</option>
-                </select> of the conditions
-            </div>
-            <h4 style={{textDecoration: 'underline'}}>Conditions</h4>
-            <div className="conditions">
-                {
-                conditions.map((condition, index) => {
-                    conditionRefs[index] = React.createRef();
-                    return (<Condition 
-                                key={index} 
-                                condition={condition}
-                                items={items}
-                                fields={fields} 
-                                operations={operators}
-                                ref={conditionRefs[index]}>
-                            </Condition>)
-                })
-                }
-            </div>
-            <div className="add-button">
-                <button className="btn add-condition" type="button" onClick={() => {addRule()}}>+ Add Condition</button>
-            </div>
-        </div>
-        <div className="footer">
-            <button className="btn save" onClick={() => saveRule()}>Save</button>
-            <Link to={"/rules"}>
-                <button className="btn close">Close</button>
-            </Link>
-        </div>
-    </div>)
+        </div>)
+    }
 }
 
 export default Rule;

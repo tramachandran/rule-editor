@@ -16,21 +16,47 @@ div.rules-list {
         a {
             text-decoration: none;
         }
-        div.card{
-            min-height: 35vh;
-            min-width: 25vw;
+        div.card {
+            position: relative;
+            height: 40vh;
+            width: 30vw;
             box-shadow: 0 .15rem 0 0 #dedede;
             border: .05rem solid #dedede;
             margin: 0.5rem 1rem 0.5rem 0;
-            cursor: pointer;
             text-decoration: none;
             color: black;
             .header {
+                cursor: pointer;
                 font-weight: 500;
                 padding: .6rem .9rem;
                 border-bottom: .05rem solid #dedede;
-                border-bottom-color: #dedede;
-                border-bottom-width: .05rem;
+            }
+            .body {
+                margin: 1vh 1vw;
+                font-size: 1rem;
+                .data-list {
+                    span:first-child {
+                        font-weight: 500;
+                        display: inline-block;
+                        width: 40%;
+                    }
+                    span.badge {
+                        width: 1rem;
+                        background-color: blueviolet;
+                        border: 1px solid white;
+                        color: white;
+                        text-align:center;
+                        display: inline-block;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            .footer {
+                padding: .6rem .9rem;
+                border-top: .05rem solid #dedede;
+                bottom: 0.1rem;
+                position: absolute;
+                width: calc(100% - 1.8rem);;
             }
         }
     }
@@ -56,6 +82,15 @@ div.rules-list {
         letter-spacing: .12em;
         border: .05rem solid #0072a3;
         text-transform: uppercase;
+        &.btn-link {
+            border: none;
+            background: transparent;
+            color: blue;
+            line-height: 0.9;
+        }
+        &.btn-danger {
+            color: red
+        }
     }
 }
 

@@ -38,20 +38,50 @@ function RulesList(stateProps) {
             })
           })
     }
-
+    const getShortDate = (timeInSecs) => {
+        if (timeInSecs) {
+            let date = new Date(timeInSecs);
+            return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        } else {
+            return '--';
+        }
+        
+    }
     const rules = ruleState.rules;
 
     if (ruleState.isLoading) {
-        return <div><h4>Hold on data is loading.....</h4></div>
+        return <div><h4>Hold on rules are loading.....</h4></div>
     } else if (ruleState.errorMsg !== '') {
         return <div className="error"><h4>{ruleState.errorMsg}</h4></div>
     } else {
         const content = rules.length > 0 ? rules.map((rule, index) => {
-            return <Link key={index} to={`./rules/${rule.id}`}>
-                        <div className="card">
+            return (<div key={index} className="card">
+                        <Link to={`./rules/${rule.id}`}>
                             <div className="header">{rule.name}</div>
+                        </Link>
+                        <div className="body">
+                            <div className="description">{rule.description}</div>
+                            <div className="data-list">
+                                <span>No.of Conditions: </span>
+                                <span className="badge">{rule.conditions.length}</span>
+                            </div>
+                            <div className="data-list">
+                                <span>Created By: </span>
+                                <span>{rule.createdby}</span>
+                            </div>
+                            <div className="data-list">
+                                <span>Updated on: </span>
+                                <span>{getShortDate(rule.updatedon)}</span>
+                            </div>
                         </div>
-                    </Link>
+                        <div className="footer">
+                            <Link to={`./rules/${rule.id}`}>
+                                <button className="btn btn-link">Edit</button>
+                            </Link>
+                            <button className="btn btn-link btn-danger">Delete</button>
+                        </div>
+                    </div>
+                    )
         }) : <span>No rules available</span>;
         return (
             <div className="rules-list">
