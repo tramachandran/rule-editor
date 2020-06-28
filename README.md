@@ -23,6 +23,17 @@ Three Routes
 
 Mock APIs is hosted on "https://my-json-server.typicode.com/tramachandran/rule-editor"
 and the sample data is available in db.json file....
+Get call works fine,
+Whereas Post, Put, Delete works fine but they really don't update the db.json file.
+"Message from my-json-server team (the resource will not be really updated on the server but it will be faked as if)". So the changes are not persisted.
+
+### Db.json
+The file db.json contains the default rules set which is used for rendering rule cards  and each data represents the various forms of rule with different conditions.
+The put and post call for creating and updating the rule will console log the data structure of the rule gets created.... For sample data structure for rule please refer to db.json file
+"Delete" rule is not implemented on rules list screen.
+
+### Default Data sets
+Fields, Operations and Items are currently used from files inside model folder, later this data can be moved to server and fetched using useEffect method....
 
 ###  To run the Application
 
@@ -39,5 +50,3 @@ You will also see any lint errors in the console.
 ### Screenshots
 Application's desktop screen view and
 mobile screen view is available inside screenshots folder
-
-

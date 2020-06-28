@@ -54,14 +54,14 @@ function RulesList(stateProps) {
 
     }
     const rules = ruleState.rules;
-
+    // Rendering logic for rules cards
     if (ruleState.isLoading) {
         return <div><h4>Hold on rules are loading.....</h4></div>
     } else if (ruleState.errorMsg !== '') {
         return <div className="error"><h4>{ruleState.errorMsg}</h4></div>
     } else {
         const content = rules.length > 0 ? rules.map((rule, index) => {
-            return (<div key={index} className="card">
+            return (<div key={rule.id} className="card">
                 <Link to={`./rules/${rule.id}`}>
                     <div className="header">{rule.name}</div>
                 </Link>

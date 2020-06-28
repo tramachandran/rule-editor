@@ -46,40 +46,41 @@ function Condition(props, ref) {
     }
     const fieldSelectRef = useRef(null);
     useImperativeHandle(ref, () => ({
-        getFieldValue: () => {
-            return field;
+        setFocus: () => {
+            fieldSelectRef.current.focus();
         },
         getCondition: () => {
             let condition = {};
             let errorMsgs = [];
+            let conditionNumber = `Condition ${props.index + 1} --`
             let fieldValue = getFieldValue();
             if (!fieldValue) {
-                errorMsgs.push("Field is not selected");
+                errorMsgs.push(`${conditionNumber} Field is not selected`);
             } else {
                 condition.field = fieldValue;
                 let operator = getOperatorValue();
                 if (!operator) {
-                    errorMsgs.push("Operation is not selected");
+                    errorMsgs.push(`${conditionNumber} Operation is not selected`);
                 } else {
                     condition.operation = operator;
                     let value = getValue();
                     if (operator === 'contains') {
                         if (value.length === 0) {
-                            errorMsgs.push("Items are not selected for value field");
+                            errorMsgs.push(`${conditionNumber} Items are not selected for value field`);
                         } else {
                             condition.value = value;
                         }
                     } else if (operator === 'in') {
                         if (!value) {
-                            errorMsgs.push("Value field should not be empty");
+                            errorMsgs.push(`${conditionNumber} Value field should not be empty`);
 
                         } else {
-                            (value.split(",").length <= 1) ? errorMsgs.push("Value field should contain multiple comma seperated values") :
+                            (value.split(",").length <= 1) ? errorMsgs.push(`${conditionNumber} Value field should contain multiple comma seperated values`) :
                                 condition.value = value;
                         }
                     } else {
                         if (value < 0) {
-                            errorMsgs.push("Value is not provided");
+                            errorMsgs.push(`${conditionNumber} Value should not be negative`);
                         } else {
                             condition.value = value;
                         }
@@ -167,7 +168,7 @@ function Condition(props, ref) {
                     (props.index === 0) ? <label>Field</label> : null
                 }
                 <select ref={fieldSelectRef} value={field} onChange={(event) => { fieldChange(event) }}>
-                    <option value="">Select Field</option>
+                    <option value="" disabled>Select Field</option>
                     {
                         props.fields.map((field, index) => {
                             return <option key={index} value={field.value}>{field.text}</option>
@@ -180,7 +181,7 @@ function Condition(props, ref) {
                     (props.index === 0) ? <label>Operation</label> : null
                 }
                 <select value={operator} onChange={(event) => { operationChange(event) }}>
-                    <option value="">Select Operation</option>
+                    <option value="" disabled>Select Operation</option>
                     {
                         props.operations.map((operation, index) => {
                             return <option key={index} disabled={getDisbledValue(operation)} value={operation.value}>{operation.text}</option>
@@ -195,7 +196,7 @@ function Condition(props, ref) {
                     valueType === 'select' ?
                         (
                             <select value={selectValue} onChange={(event) => { selectValueChange(event) }} multiple>
-                                <option value="">Select Item/s</option>
+                                <option disabled value="">Select Item/s</option>
                                 {
                                     props.items.map((item, index) => {
                                         return (<option key={index} value={item.itemValue}>{item.itemName}</option>)
@@ -213,7 +214,7 @@ function Condition(props, ref) {
             {
                 (props.index > 0) ? (
                     <div title="Remove Condition" onClick={removeCondition} className="remove">
-                        <button class="btn condition">X</button>
+                        <button className="btn condition">X</button>
                     </div>) : null
             }
 

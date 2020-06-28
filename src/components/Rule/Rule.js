@@ -7,7 +7,6 @@ import defaultOperators from '../../models/operations';
 import defaultFields from '../../models/fields';
 import axios from 'axios';
 
-
 const defaultCondition = {
     field: '',
     operation: '',
@@ -27,17 +26,23 @@ const Rule = (props) => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errorMsgs, setErrorMsgs] = useState([]);
+    // For generating the unique Id for condition component
+    const getRandomConditionId = () => {
+        return Math.random().toString(36).slice(2);
+    }
     useEffect(() => {
         /// need to add the code for setting fields, operations and items from an API call
         setFields(defaultFields);
         setOperators(defaultOperators);
         setItems(defaultItems);
         if (!ruleId) {
+            defaultCondition.id = getRandomConditionId();
             setConditions([defaultCondition]);
         } else {
             getRuleData();
         }
     }, []);
+    /// Getting the rule on edit
     const getRuleData = () => {
         setIsLoading(true);
         axios.get(`rules/${ruleId}`).then(response => {
@@ -46,7 +51,11 @@ const Rule = (props) => {
             setName(ruleData.name);
             setDescription(ruleData.description);
             setMatch(ruleData.match);
-            setConditions([...ruleData.conditions]);
+            let allConditions = ruleData.conditions.map((condition, index) => {
+                condition.id = getRandomConditionId();
+                return condition;
+            })
+            setConditions([...allConditions]);
             setError('')
         }).catch((err) => {
             setIsLoading(false);
@@ -55,11 +64,13 @@ const Rule = (props) => {
         })
     };
 
+    /// closing the error message box
     const closeErrorMsgs = () => {
         setErrorMsgs([]);
     }
 
-    const addRule = () => {
+    const addRuleCondition = () => {
+        defaultCondition.id = getRandomConditionId();
         setConditions([...conditions, defaultCondition]);
     }
 
@@ -69,10 +80,12 @@ const Rule = (props) => {
     }
 
     let conditionRefs = [];
-    const history = useHistory();
+    const history = useHistory(); /// Used for route back to rules screen
+    // Save the rule
     const saveRule = () => {
         let rule = {};
         let errorMsgs = [];
+        setErrorMsgs(errorMsgs); /// To remove the error div
         rule.name = name;
         if (!name) {
             errorMsgs.push("Rule name should not be empty");
@@ -82,19 +95,34 @@ const Rule = (props) => {
         rule.conditions = [];
         for (let conditionRef of conditionRefs) {
             let condition = conditionRef.current.getCondition();
-            // data.field = conditionRef.current.getFieldValue();
-            // data.operator = conditionRef.current.getOperatorValue();
-            // data.value = conditionRef.current.getValue();
             errorMsgs = [...errorMsgs, ...condition.errorMsgs];
             delete condition.errorMsgs;
             rule.conditions.push(condition);
         }
-        rule.id = new Date().getTime();
+        rule.id = ruleId ? ruleId : (new Date().getTime());
         if (rule.conditions.length === 0) {
             errorMsgs.push("Add atleast one condition to the rule.")
         }
         if (errorMsgs.length === 0) {
-            history.push('/rules');
+            if (ruleId) {
+                // For updating the rule
+                axios.put(`rules/${rule.id}`, rule)
+                    .then(response => {
+                        console.log(response.data);
+                        history.push('/rules');
+                    }).catch(err => {
+                        setErrorMsgs([err.message]);
+                    })
+            } else {
+                // For new rule
+                axios.post("rules", rule)
+                    .then(response => {
+                        console.log(response.data);
+                        history.push('/rules');
+                    }).catch(err => {
+                        setErrorMsgs([err.message]);
+                    })
+            }
         } else {
             setErrorMsgs(errorMsgs)
         }
@@ -116,7 +144,7 @@ const Rule = (props) => {
                                 return <div key={index} className="error">{msg}</div>
                             })
                         }
-                        <div title="close errors" onClick={closeErrorMsgs} className="remove"><button class="btn btn-link btn-danger">X</button></div>
+                        <div title="close errors" onClick={closeErrorMsgs} className="remove"><button className="btn btn-link btn-danger">X</button></div>
                     </div>
                 ) : null
             }
@@ -142,7 +170,7 @@ const Rule = (props) => {
                         conditions.map((condition, index) => {
                             conditionRefs[index] = React.createRef();
                             return (<Condition
-                                key={index}
+                                key={condition.id}
                                 condition={condition}
                                 delete={deleteCondition}
                                 items={items}
@@ -155,7 +183,7 @@ const Rule = (props) => {
                     }
                 </div>
                 <div className="add-button">
-                    <button className="btn condition" type="button" onClick={() => { addRule() }}>+ Add Condition</button>
+                    <button className="btn condition" type="button" onClick={() => { addRuleCondition() }}>+ Add Condition</button>
                 </div>
             </div>
             <div className="footer">
